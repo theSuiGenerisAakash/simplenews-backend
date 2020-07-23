@@ -1,0 +1,14 @@
+{
+    "javascript.format.enable": false,
+    "[javascript]": { "editor.formatOnSave": true },
+    "eslint.alwaysShowStatus": true,
+    "eslint.packageManager": "yarn",
+    "eslint.format.enable": true,
+    "eslint.enable": true,
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "prettier.tabWidth": 4,
+    "prettier.requireConfig": true
+}

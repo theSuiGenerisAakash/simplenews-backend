@@ -1,11 +1,16 @@
 module.exports = {
-    "extends": "airbnb-base",
+    "extends": [
+        "airbnb-base",
+        "plugin:prettier/recommended"
+    ],
     "plugins": [
-        "import"
+        "import",
+        "prettier"
     ],
     "parser": "babel-eslint",
     "rules": {
-        "indent": ["error", 4]
+        "comma-dangle": 0,
+        "prettier/prettier": "error"
     },
     "parserOptions": {
         "sourceType": "module",

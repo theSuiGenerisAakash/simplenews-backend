@@ -6,6 +6,14 @@
         "@babel/plugin-proposal-export-namespace-from",
         "@babel/plugin-proposal-function-bind",
         "@babel/plugin-proposal-object-rest-spread",
+        [
+            "@babel/plugin-transform-runtime",
+            {
+                "regenerator": true,
+                "corejs": 3
+            }
+        ]
+
     ],
     "presets": [
         "@babel/preset-env",
