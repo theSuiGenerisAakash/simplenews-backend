@@ -118,7 +118,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "esw *.js server config --color && jest"
+            // "pre-commit": "esw *.js server config --color && jest"
         }
     }
 }
