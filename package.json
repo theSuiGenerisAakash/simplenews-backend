@@ -58,6 +58,7 @@
         "testEnvironment": "node"
     },
     "dependencies": {
+        "bcrypt": "false5.0.0",
         "bluebird": "3.5.5",
         "body-parser": "1.19.0",
         "compression": "1.7.4",
@@ -93,9 +94,11 @@
         "@babel/plugin-syntax-dynamic-import": "^7.2.0",
         "@babel/plugin-syntax-export-namespace-from": "^7.2.0",
         "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+        "@babel/plugin-transform-runtime": "false7.10.5",
         "@babel/preset-env": "^7.2.0",
         "@babel/preset-react": "^7.0.0",
         "@babel/register": "^7.0.0",
+        "@babel/runtime-corejs3": "false7.10.5",
         "babel-eslint": "^10.0.2",
         "babel-loader": "^8.0.4",
         "commitizen": "^4.0.3",
@@ -103,7 +106,9 @@
         "cross-env": "5.2.0",
         "eslint": "6.1.0",
         "eslint-config-airbnb-base": "14.0.0",
+        "eslint-config-prettier": "false6.11.0",
         "eslint-plugin-import": "2.18.2",
+        "eslint-plugin-prettier": "false3.1.4",
         "eslint-watch": "6.0.0",
         "gulp-babel": "8.0.0",
         "gulp-newer": "^1.1.0",
@@ -114,11 +119,7 @@
         "jest": "24.8.0",
         "jest-fetch-mock": "2.1.2",
         "jsdom": "15.1.1",
+        "prettier": "false2.0.5",
         "validate-commit-msg": "^2.6.1"
-    },
-    "husky": {
-        "hooks": {
-            // "pre-commit": "esw *.js server config --color && jest"
-        }
     }
 }
