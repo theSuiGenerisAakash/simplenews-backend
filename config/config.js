@@ -9,7 +9,10 @@ const envVarsSchema = Joi.object({
     PORT: Joi.number().default(4000),
     API_VERSION: Joi.string().default("1.0").description("API Version"),
     JWT_SECRET: Joi.string().required().description("JWT Secret required to sign"),
-    UNIQUE_NAME_PG_DB: Joi.string().default("api").description("Postgres database name"),
+    UNIQUE_NAME_PG_DB: Joi.string().description("Postgres database name"),
+    UNIQUE_NAME_PG_SCHEMA: Joi.string()
+        .default("public")
+        .description("Postgres database schema name"),
     UNIQUE_NAME_PG_PORT: Joi.number().default(5432),
     UNIQUE_NAME_PG_HOST: Joi.string().default("localhost"),
     UNIQUE_NAME_PG_USER: Joi.string()
@@ -40,6 +43,7 @@ const config = {
     jwtSecret: envVars.JWT_SECRET,
     postgres: {
         db: envVars.UNIQUE_NAME_PG_DB,
+        schema: envVars.UNIQUE_NAME_PG_SCHEMA,
         port: envVars.UNIQUE_NAME_PG_PORT,
         host: envVars.UNIQUE_NAME_PG_HOST,
         user: envVars.UNIQUE_NAME_PG_USER,
