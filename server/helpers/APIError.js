@@ -1,6 +1,6 @@
 /* eslint max-classes-per-file: 0 */
 
-import httpStatus from 'http-status';
+import httpStatus from "http-status";
 
 /**
  * @extends Error
