@@ -104,7 +104,7 @@
         "commitizen": "^4.0.3",
         "coveralls": "^3.0.6",
         "cross-env": "5.2.0",
-        "eslint": "6.1.0",
+        "eslint": "false7.3.1",
         "eslint-config-airbnb-base": "14.0.0",
         "eslint-config-prettier": "false6.11.0",
         "eslint-plugin-import": "2.18.2",
