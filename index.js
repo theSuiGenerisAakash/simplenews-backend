@@ -1,17 +1,10 @@
-import { loggers } from 'winston';
-import config from './config/config';
-import app from './config/express';
-/* eslint-disable no-unused-vars */
-import db from './config/sequelize';
-
-const debug = require('debug')('amida-api-boilerplate:index');
-/* eslint-enable no-unused-vars */
-
-// Get default logger
-const logger = loggers.get(config.loggerName); // eslint-disable-line no-global-assign
+import logger from "./config/winston";
+import config from "./config/config";
+import app from "./config/express";
 
 // make bluebird default Promise
-Promise = require('bluebird'); // eslint-disable-line no-global-assign
+// eslint-disable-next-line no-global-assign
+Promise = require("bluebird");
 
 // module.parent check is required to support mocha watch
 if (!module.parent) {

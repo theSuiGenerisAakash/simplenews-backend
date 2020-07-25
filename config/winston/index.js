@@ -1,2 +1,1 @@
-export createLoggerWithOptions from './loggers-container-accessor';
-export winstonFormatter from './winston-formatter';
+export { default } from "./get-default-logger";

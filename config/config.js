@@ -20,6 +20,9 @@ const envVarsSchema = Joi.object({
         .default("postgres")
         .description("Postgres username"),
     UNIQUE_NAME_PG_PASSWD: Joi.string().required().description("Postgres password"),
+    LOG_LEVEL: Joi.string()
+        .allow(["error", "warn", "info", "http", "verbose", "debug", "silly"])
+        .default("http"),
     UNIQUE_NAME_PG_SSL: Joi.bool()
         .default(false)
         .description("Enable SSL connection to PostgreSQL"),
@@ -38,6 +41,8 @@ if (error) {
 
 const config = {
     env: envVars.NODE_ENV,
+    loggerName: "root",
+    logLevel: envVars.LOG_LEVEL,
     port: envVars.PORT,
     apiVersion: envVars.API_VERSION,
     jwtSecret: envVars.JWT_SECRET,

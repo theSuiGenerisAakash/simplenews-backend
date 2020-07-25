@@ -1,11 +1,11 @@
-import { loggers } from 'winston';
-import config from '../config';
-import createLoggerWithOptions from './loggers-container-accessor';
+import { loggers } from "winston";
+import config from "../config";
+import createLoggerWithOptions from "./loggers-container-accessor";
 
 const loggerOptions = {
     name: config.loggerName,
     env: config.env,
-    logLevel: config.logLevel,
+    logLevel: config.logLevel
 };
 createLoggerWithOptions(loggerOptions);
 
