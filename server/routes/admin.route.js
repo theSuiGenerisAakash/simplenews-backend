@@ -1,6 +1,5 @@
 import express from "express";
-import validate from "express-validation";
-import reqValidation from "../../config/joi-validation";
+import { ev, validationRules } from "../../config/joi-validation";
 import adminCtrl from "../controllers/admin.controller";
 import userCtrl from "../controllers/user.controller";
 
@@ -14,7 +13,7 @@ router
     .route("/users/:id")
 
     /** GET /api/users/:userId - Get user */
-    .get(validate(reqValidation.getUser), userCtrl.get);
+    .get(ev(validationRules.getUser), userCtrl.get);
 
 router
     .route("/users")
@@ -23,12 +22,12 @@ router
     .get(adminCtrl.getAll)
 
     /** POST /api/users - Create new user */
-    .post(validate(reqValidation.createUser), adminCtrl.create)
+    .post(ev(validationRules.createUser), adminCtrl.create)
 
     /** PUT /api/users/:userId - Update user */
-    .put(validate(reqValidation.updateAdmin), adminCtrl.update)
+    .put(ev(validationRules.updateAdmin), adminCtrl.update)
 
     /** DELETE /api/users/:userId - Delete user */
-    .delete(validate(reqValidation.deleteUser), adminCtrl.remove);
+    .delete(ev(validationRules.deleteUser), adminCtrl.remove);
 
 export default router;

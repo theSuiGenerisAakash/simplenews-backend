@@ -1,6 +1,5 @@
 import express from "express";
-import validate from "express-validation";
-import reqValidation from "../../config/joi-validation";
+import { ev, validationRules } from "../../config/joi-validation";
 import userCtrl from "../controllers/user.controller";
 import isSameUser from "../helpers/userUtil";
 
@@ -10,12 +9,12 @@ router
     .route("/:id")
 
     /** GET /api/users/:userId - Get user */
-    .get(validate(reqValidation.getUser), isSameUser, userCtrl.get);
+    .get(ev(validationRules.getUser), isSameUser, userCtrl.get);
 
 router
     .route("/")
 
     /** PUT /api/users/ - Update user */
-    .put(validate(reqValidation.updateUser), isSameUser, userCtrl.update);
+    .put(ev(validationRules.updateUser), isSameUser, userCtrl.update);
 
 export default router;
