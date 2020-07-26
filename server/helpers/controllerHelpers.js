@@ -7,9 +7,10 @@ const catchClause = (
     message = "Something went wrong!",
     statusCode = httpStatus.INTERNAL_SERVER_ERROR
 ) => {
-    logger.error(err);
+    const msgCapture = (err.errors && err.errors[0].message) || message;
+    logger.error(msgCapture);
     return next({
-        message,
+        message: msgCapture,
         status: statusCode
     });
 };

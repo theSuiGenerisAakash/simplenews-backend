@@ -14,27 +14,30 @@ import catchClause from "../helpers/controllerHelpers";
 function login(req, res, next) {
     const reqUsername = req.body.username;
     const reqPassword = req.body.password;
-    return db.Users.getUserByUsernameOrId(reqUsername)
+    return db.Users.getUserByUsername(reqUsername)
         .then((user) => {
             if (!user) {
                 throw Error("User not found");
             }
-            const { username, id, name } = user.dataValues;
+            const { username, id, name, isAdmin } = user.dataValues;
             if (user.isValidPassword.call(user, reqPassword)) {
                 const token = jwt.sign(
                     {
                         username,
-                        id
+                        id,
+                        isAdmin
                     },
                     config.jwtSecret,
                     {
-                        expiresIn: 3600
+                        expiresIn: 3600 * 240
                     }
                 );
                 return res.json({
                     token,
                     username,
-                    name
+                    name,
+                    isAdmin,
+                    id
                 });
             }
             throw Error();

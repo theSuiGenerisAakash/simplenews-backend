@@ -1,90 +1,59 @@
-import httpStatus from 'http-status';
-import db from '../../config/sequelize';
+import httpStatus from "http-status";
+import db from "../../config/sequelize";
+import catchClause from "../helpers/controllerHelpers";
 
-const { User } = db;
+const { Users } = db;
 
 /**
- * Load user and append to req.
+ * @typedef {Object} User
+ * @property {string} username
+ * @property {string} name
+ * @property {string} id
+ * @property {boolean} isAdmin
  */
-function load(req, res, next, id) {
-    User.findOne({ where: { id } })
-        .then((user) => {
-            if (!user) {
-                const e = new Error('User does not exist');
-                e.status = httpStatus.NOT_FOUND;
-                return next(e);
-            }
-            req.user = user; // eslint-disable-line no-param-reassign
-            return next();
-        })
-        .catch((e) => next(e));
-}
 
 /**
  * Get user
+ * @property {string} req.params.id
  * @returns {User}
  */
-function get(req, res) {
-    return res.json(req.user);
-}
-
-/**
- * Create new user
- * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
- * @returns {User}
- */
-function create(req, res, next) {
-    const user = User.build({
-        username: req.body.username,
-    });
-
-    user.save()
-        .then((savedUser) => res.json(savedUser))
-        .catch((e) => next(e));
+function get(req, res, next) {
+    const {
+        params: { id }
+    } = req;
+    return Users.getUserById(id)
+        .then((user) => {
+            if (user) {
+                return res.status(httpStatus.OK).send(user);
+            }
+            return res.status(httpStatus.NOT_FOUND).send("User not found");
+        })
+        .catch((err) => catchClause(err, next, "User fetch failed"));
 }
 
 /**
  * Update existing user
  * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
+ * @property {string} req.body.name - The name of user.
+ * @property {string} req.body.password - The password of user.
+ * @property {string} req.body.id - user's id
  * @returns {User}
  */
 function update(req, res, next) {
-    const { user } = req;
-    user.username = req.body.username;
-    user.mobileNumber = req.body.mobileNumber;
-
-    user.save()
-        .then((savedUser) => res.json(savedUser))
-        .catch((e) => next(e));
-}
-
-/**
- * Get user list.
- * @property {number} req.query.skip - Number of users to be skipped.
- * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
- */
-function list(req, res, next) {
-    const { limit = 50 } = req.query;
-    User.findAll({ limit })
-        .then((users) => res.json(users))
-        .catch((e) => next(e));
-}
-
-/**
- * Delete user.
- * @returns {User}
- */
-function remove(req, res, next) {
-    const { user } = req;
-    const { username } = req.user;
-    user.destroy()
-        .then(() => res.json(username))
-        .catch((e) => next(e));
+    const {
+        body: { username, password, name, id }
+    } = req;
+    return Users.updateUser({ username, password, name, id })
+        .then((updatedUser) => {
+            if (updatedUser) {
+                return res.status(httpStatus.OK).send(updatedUser);
+            }
+            return res.status(httpStatus.NOT_FOUND);
+        })
+        .catch((err) => catchClause(err, next, "User details couldn't be updated"));
 }
 
 export default {
-    load, get, create, update, list, remove,
+    get,
+    update
 };

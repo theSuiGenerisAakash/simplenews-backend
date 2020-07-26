@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * Users Schema
  */
@@ -5,6 +6,20 @@ import { Sequelize } from "sequelize";
 import { modelOptions, timeFields } from "../helpers/modelsOptionsHelper";
 
 const bcrypt = require("bcrypt");
+
+const sanitiseAndTrim = (users) => {
+    const toReturn = (user) => ({
+        username: user.dataValues.username,
+        name: user.dataValues.name,
+        isAdmin: user.dataValues.isAdmin,
+        id: user.dataValues.id
+    });
+    if (users === null) return users;
+    if (!Array.isArray(users)) {
+        return toReturn(users);
+    }
+    return users.map((user) => toReturn(user));
+};
 
 module.exports = (sequelize, DataTypes) => {
     const Users = sequelize.define(
@@ -27,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
             password: {
                 type: DataTypes.STRING,
                 allowNull: false
+            },
+            isAdmin: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: false
             },
             ...timeFields
         },
@@ -53,50 +73,58 @@ module.exports = (sequelize, DataTypes) => {
         return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
     };
 
-    Users.getUserByUsernameOrId = async (username = undefined, id = undefined) => {
-        return Users.findOne({
+    Users.getUserByUsername = async (username) =>
+        Users.findOne({
             where: {
-                ...(username && { username }),
-                ...(id && { id })
+                username
             }
         });
-    };
 
-    Users.getUsers = async (userId) => {
-        return Users.findAll({
+    Users.getUserById = async (id) =>
+        Users.findOne({
             where: {
-                userId
+                id
             }
-        });
-    };
+        }).then(sanitiseAndTrim);
 
-    Users.addUsers = async (users) => {
-        return Users.bulkCreate(
-            users.map((user) => ({ ...user, password: Users.generateHash(user.password) }))
+    Users.getAllUsers = async () =>
+        Users.findAll().then((users) =>
+            users.map((user) => {
+                // eslint-disable-next-line no-param-reassign
+                delete user.dataValues.password;
+                return user;
+            })
         );
-    };
 
-    Users.deleteUsers = async (users) => {
-        return Users.destroy({
+    Users.createUsers = async (users) =>
+        Users.bulkCreate(
+            users.map((user) => ({ ...user, password: Users.generateHash(user.password) })),
+            {
+                returning: true
+            }
+        ).then(sanitiseAndTrim);
+
+    Users.deleteUsers = async (users) =>
+        Users.destroy({
             where: {
-                username: {
-                    [Sequelize.Op.in]: [users.map((user) => user.username).join(",")]
+                id: {
+                    [Sequelize.Op.in]: [users.map((user) => user.id).join(",")]
                 }
             }
         });
-    };
 
-    Users.updateUser = async (username, user) => {
-        const { name, password } = user;
+    Users.updateUser = async (user) => {
+        const userId = user.id;
+        delete user.id;
         return Users.update(
-            { name, password: Users.generateHash(password) },
+            { ...user, password: Users.generateHash(user.password) },
             {
                 where: {
-                    username
+                    id: userId
                 },
                 returning: true
             }
-        );
+        ).then((updatedUsers) => sanitiseAndTrim(updatedUsers[1]));
     };
 
     return Users;
