@@ -1,51 +1,45 @@
-import jwt from 'jsonwebtoken';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
-import config from '../../config/config';
-
-// sample user, used for authentication
-const user = {
-    username: 'react',
-    password: 'express',
-};
+import jwt from "jsonwebtoken";
+import httpStatus from "http-status";
+import config from "../../config/config";
+import db from "../../config/sequelize";
+import catchClause from "../helpers/controllerHelpers";
 
 /**
- * Returns jwt token if valid username and password is provided
+ * Returns jwt token and other user details if valid username and password is provided
  * @param req
  * @param res
  * @param next
  * @returns {*}
  */
 function login(req, res, next) {
-    // Ideally you'll fetch this from the db
-    // Idea here was to show how jwt works with simplicity
-    if (req.body.username === user.username && req.body.password === user.password) {
-        const token = jwt.sign({
-            username: user.username,
-            expiresIn: 3600,
-        }, config.jwtSecret);
-        return res.json({
-            token,
-            username: user.username,
-        });
-    }
-
-    const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-    return next(err);
+    const reqUsername = req.body.username;
+    const reqPassword = req.body.password;
+    return db.Users.getUserByUsernameOrId(reqUsername)
+        .then((user) => {
+            if (!user) {
+                throw Error("User not found");
+            }
+            const { username, id, name } = user.dataValues;
+            if (user.isValidPassword.call(user, reqPassword)) {
+                const token = jwt.sign(
+                    {
+                        username,
+                        id
+                    },
+                    config.jwtSecret,
+                    {
+                        expiresIn: 3600
+                    }
+                );
+                return res.json({
+                    token,
+                    username,
+                    name
+                });
+            }
+            throw Error();
+        })
+        .catch((err) => catchClause(err, next, err.message, httpStatus.FORBIDDEN));
 }
 
-/**
- * This is a protected route. Will return random number only if jwt token is provided in header.
- * @param req
- * @param res
- * @returns {*}
- */
-function getRandomNumber(req, res) {
-    // req.user is assigned by jwt middleware if valid token is provided
-    return res.json({
-        user: req.user,
-        num: Math.random() * 100,
-    });
-}
-
-export default { login, getRandomNumber };
+export default { login };
