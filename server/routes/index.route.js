@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./auth.route";
 import adminRoutes from "./admin.route";
 import userRoutes from "./user.route";
+import newsRoutes from "./news.route";
 import isAdmin from "../helpers/adminUtil";
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -14,5 +15,7 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 
 router.use("/admin", isAdmin, adminRoutes);
+
+router.use("/news", newsRoutes);
 
 export default router;

@@ -1,6 +1,7 @@
 /**
  * News schema
  */
+import Sequelize from "sequelize";
 import { modelOptions, timeFields } from "../helpers/modelsOptionsHelper";
 
 module.exports = (sequelize, DataTypes) => {
@@ -14,13 +15,17 @@ module.exports = (sequelize, DataTypes) => {
             },
             sourceId: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true
             },
             sourceName: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
             author: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            title: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
@@ -63,16 +68,26 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
-    News.getNews = async (newsId) => {
+    News.getNewsByIds = async (newsIds) => {
         return News.findAll({
             where: {
-                id: newsId
+                id: {
+                    [Sequelize.Op.in]: [newsIds.join(",")]
+                }
+            }
+        });
+    };
+
+    News.getNewsByUrl = async (url) => {
+        return News.findOne({
+            where: {
+                url
             }
         });
     };
 
     News.addNews = async (news) => {
-        return News.upsert(news);
+        return News.create(news);
     };
 
     News.deleteNews = async (newsId) => {

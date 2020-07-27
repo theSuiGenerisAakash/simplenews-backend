@@ -64,7 +64,7 @@ const validationRules = {
         }
     },
 
-    // Get news /api/news
+    // POST news /api/news
     getNews: {
         body: Joi.object({
             search: Joi.string(),
@@ -132,8 +132,44 @@ const validationRules = {
                 "us",
                 "ve",
                 "za"
-            ])
-        }).min(1)
+            ]),
+            page: Joi.number().default(0)
+        }).min(2)
+    },
+
+    // GET /api/news/:userId
+    getBookmarkedNews: {
+        params: {
+            userId: Joi.string().required()
+        }
+    },
+
+    // POST /api/news/:userId
+    bookmarkNews: {
+        params: {
+            userId: Joi.string().required()
+        },
+        news: {
+            sourceId: Joi.string().allow(null).required(),
+            sourceName: Joi.string().required(),
+            author: Joi.string().required(),
+            title: Joi.string().required(),
+            description: Joi.string().required(),
+            url: Joi.string().uri(),
+            urlToImage: Joi.string().uri(),
+            publishedAt: Joi.date().required(),
+            content: Joi.string().required()
+        }
+    },
+
+    // DELETE /api/news/:userId
+    removeBookmarkedNews: {
+        params: {
+            userId: Joi.string().required()
+        },
+        body: {
+            newsId: Joi.string().required()
+        }
     }
 };
 

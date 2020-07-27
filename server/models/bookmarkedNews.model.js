@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
-    BookmarkedNews.getBookmarksForUser = async (userId) => {
+    BookmarkedNews.getBookmarkedNewsForUser = async (userId) => {
         return BookmarkedNews.findAll({
             where: {
                 userId
@@ -55,7 +55,12 @@ module.exports = (sequelize, DataTypes) => {
         if (isAlreadyPresent) {
             return isAlreadyPresent.restore();
         }
-        return BookmarkedNews.create({ userId, newsId });
+        return BookmarkedNews.findOrCreate({
+            where: {
+                userId,
+                newsId
+            }
+        });
     };
 
     BookmarkedNews.removeBookmark = async (userId, newsId) => {
