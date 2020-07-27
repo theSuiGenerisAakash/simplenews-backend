@@ -1,6 +1,6 @@
-import fetch from 'jest-fetch-mock'; // eslint-disable-line import/no-extraneous-dependencies, import/newline-after-import
-import config from './config/config';
-import { createLoggerWithOptions } from './config/winston';
+import fetch from "jest-fetch-mock"; // eslint-disable-line import/no-extraneous-dependencies, import/newline-after-import
+import config from "./config/config";
+import createLoggerWithOptions from "./config/winston/loggers-container-accessor";
 
 /**
  * Some tests make use of supertest which sets up the app straight from root index.js
@@ -10,7 +10,7 @@ import { createLoggerWithOptions } from './config/winston';
 const loggerOptions = {
     name: config.loggerName,
     env: config.env,
-    logLevel: config.logLevel,
+    logLevel: config.logLevel
 };
 createLoggerWithOptions(loggerOptions);
 
