@@ -1,4 +1,4 @@
-FROM node:8.10.0 as builder
+FROM node:12.18.0 as builder
 
 # create app directory in container
 RUN mkdir -p /app
@@ -18,7 +18,7 @@ COPY . /app/
 RUN yarn copy
 RUN yarn babel
 
-FROM node:8.10.0
+FROM node:12.18.0
 
 WORKDIR /app
 
