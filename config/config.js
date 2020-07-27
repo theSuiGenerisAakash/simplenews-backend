@@ -23,6 +23,7 @@ const envVarsSchema = Joi.object({
     LOG_LEVEL: Joi.string()
         .allow(["error", "warn", "info", "http", "verbose", "debug", "silly"])
         .default("http"),
+    NEWSAPI_KEY: Joi.string().required().description("NewsAPI API key"),
     UNIQUE_NAME_PG_SSL: Joi.bool()
         .default(false)
         .description("Enable SSL connection to PostgreSQL"),
@@ -46,6 +47,7 @@ const config = {
     port: envVars.PORT,
     apiVersion: envVars.API_VERSION,
     jwtSecret: envVars.JWT_SECRET,
+    apiKey: envVars.NEWSAPI_KEY,
     postgres: {
         db: envVars.UNIQUE_NAME_PG_DB,
         schema: envVars.UNIQUE_NAME_PG_SCHEMA,
