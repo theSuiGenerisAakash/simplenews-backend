@@ -5,15 +5,12 @@ import catchClause from "../helpers/controllerHelpers";
 const { Users } = db;
 
 /**
- * @typedef {Object} User
- * @property {string} username
- * @property {string} name
- * @property {string} id
- * @property {boolean} isAdmin
+ * @typedef {import('./user.controller').User} User
  */
 
 /**
  * Get a user from the system
+ * @returns {User[]}
  */
 function getAll(req, res, next) {
     return Users.getAllUsers()
