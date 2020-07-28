@@ -43,6 +43,7 @@
         "automock": false,
         "bail": false,
         "verbose": true,
+        "runInBand": true,
         "setupFiles": [
             "./jest-setup.js"
         ],
@@ -83,7 +84,6 @@
         "pg": "7.12.1",
         "pg-hstore": "2.3.3",
         "sequelize": "5.15.1",
-        "supertest": "4.0.2",
         "winston": "3.2.1"
     },
     "devDependencies": {
@@ -106,6 +106,7 @@
         "coveralls": "^3.0.6",
         "cross-env": "5.2.0",
         "eslint": "false7.3.1",
+        "eslint-auto-fix": "false1.0.3",
         "eslint-config-airbnb-base": "14.0.0",
         "eslint-config-prettier": "false6.11.0",
         "eslint-plugin-import": "2.18.2",
@@ -121,6 +122,7 @@
         "jest-fetch-mock": "2.1.2",
         "jsdom": "15.1.1",
         "prettier": "false2.0.5",
+        "supertest": "false4.0.2",
         "validate-commit-msg": "^2.6.1"
     }
 }

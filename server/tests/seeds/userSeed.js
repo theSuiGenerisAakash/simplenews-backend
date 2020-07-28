@@ -25,10 +25,10 @@ module.exports = {
     },
 
     down(db) {
-        return db.Users.deleteUsers([
-            { username: "AakashV" },
-            { username: "AadiV" },
-            { username: "ImastiaN" }
-        ]);
+        return db.Users.deleteUsers(
+            [{ username: "AakashV" }, { username: "AadiV" }, { username: "ImastiaN" }],
+            true,
+            true
+        );
     }
 };

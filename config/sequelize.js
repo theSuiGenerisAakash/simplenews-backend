@@ -4,7 +4,6 @@ import path from "path";
 import _ from "lodash";
 import config from "./config";
 import logger from "./winston/get-default-logger";
-import { seed, unseed } from "../server/helpers/seeds/index";
 
 const db = {};
 
@@ -50,13 +49,11 @@ fs.readdirSync(modelsDir)
 if (config.syncDB) {
     sequelize
         .sync({ force: true })
-        .then(() => {
+        .then(async () => {
             logger.info("Database structure synchronized");
-            seed(db);
         })
-        .catch((error) => {
+        .catch(async (error) => {
             logger.error("An error occured: ", error);
-            unseed(db);
         });
 }
 
