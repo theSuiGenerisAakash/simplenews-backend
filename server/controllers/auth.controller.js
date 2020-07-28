@@ -14,9 +14,11 @@ import catchClause from "../helpers/controllerHelpers";
 function login(req, res, next) {
     const reqUsername = req.body.username;
     const reqPassword = req.body.password;
+    let errStatus = "";
     return db.Users.getUserByUsername(reqUsername)
         .then((user) => {
             if (!user) {
+                errStatus = httpStatus.NOT_FOUND;
                 throw Error("User not found");
             }
             const { username, id, name, isAdmin } = user.dataValues;
@@ -29,7 +31,7 @@ function login(req, res, next) {
                     },
                     config.jwtSecret,
                     {
-                        expiresIn: 3600 * 240
+                        expiresIn: 3600 * 6
                     }
                 );
                 return res.json({
@@ -40,9 +42,10 @@ function login(req, res, next) {
                     id
                 });
             }
-            throw Error();
+            errStatus = httpStatus.UNAUTHORIZED;
+            throw Error("Authentication error");
         })
-        .catch((err) => catchClause(err, next, err.message, httpStatus.FORBIDDEN));
+        .catch((err) => catchClause(err, next, err.message, errStatus));
 }
 
 export default { login };

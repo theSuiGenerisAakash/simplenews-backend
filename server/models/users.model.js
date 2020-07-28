@@ -104,13 +104,21 @@ module.exports = (sequelize, DataTypes) => {
             }
         ).then(sanitiseAndTrim);
 
-    Users.deleteUsers = async (users) =>
+    Users.deleteUsers = async (users, byUsername = false, force = false) =>
         Users.destroy({
             where: {
-                id: {
-                    [Sequelize.Op.in]: [users.map((user) => user.id).join(",")]
-                }
-            }
+                ...(!byUsername && {
+                    id: {
+                        [Sequelize.Op.in]: [users.map((user) => user.id).join(",")]
+                    }
+                }),
+                ...(byUsername && {
+                    username: {
+                        [Sequelize.Op.in]: [users.map((user) => user.username).join(",")]
+                    }
+                })
+            },
+            force
         });
 
     Users.updateUser = async (user) => {
