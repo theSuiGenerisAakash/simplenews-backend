@@ -43,7 +43,6 @@
         "automock": false,
         "bail": false,
         "verbose": true,
-        "runInBand": true,
         "setupFiles": [
             "./jest-setup.js"
         ],

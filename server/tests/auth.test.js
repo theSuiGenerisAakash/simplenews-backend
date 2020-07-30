@@ -83,6 +83,10 @@ describe("## Auth API", () => {
         });
     });
 
+    const newsPayload = {
+        search: "Indonesia"
+    };
+
     describe(`# Authentication-dependant APIs`, () => {
         test("should fail to get news because of missing Authorization", (done) => {
             testApp
@@ -95,6 +99,16 @@ describe("## Auth API", () => {
                 .catch(done);
         });
 
+        test("should get news with valid token", (done) => {
+            testApp
+                .post(`${apiVersionPath}/news`)
+                .set("Authorization", jwtToken)
+                .send(newsPayload)
+                .expect(httpStatus.OK)
+                .then(() => done())
+                .catch(done);
+        });
+
         test("should fail to get news because of wrong token", (done) => {
             testApp
                 .post(`${apiVersionPath}/news`)
@@ -102,6 +116,7 @@ describe("## Auth API", () => {
                     "Authorization",
                     "Bearer ieyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFha2FzaFZlcm1hMSIsImlkIjoiNTZiOWMzYzQtMGQzNy00ZmI5LWEyMjctOWIyOWNkNzZkNjA1IiwiaXNBZG1pbiI6InRydWUiLCJpYXQiOjE1OTU3ODM3NzksImV4cCI6MTU5NjY0Nzc3OX0.qC9deHHytLYIe4f0oxb7R-1PseAd5VMQ1t5XGLpHLIY"
                 )
+                .send(newsPayload)
                 .expect(httpStatus.UNAUTHORIZED)
                 .then((res) => {
                     expect(res.body.message).toEqual("invalid token");
