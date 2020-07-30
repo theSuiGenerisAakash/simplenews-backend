@@ -30,7 +30,7 @@ const validationRules = {
     createUser: {
         body: {
             username: Joi.string().alphanum().required(),
-            name: Joi.string().alphanum().required(),
+            name: Joi.string().required(),
             password: Joi.string().required(),
             isAdmin: Joi.boolean().required()
         }
@@ -40,7 +40,7 @@ const validationRules = {
     updateUser: {
         body: {
             id: Joi.string().required(),
-            name: Joi.string().alphanum(),
+            name: Joi.string(),
             password: Joi.string(),
             username: Joi.string().alphanum()
         }
@@ -50,7 +50,7 @@ const validationRules = {
     updateAdmin: {
         body: {
             id: Joi.string().required(),
-            name: Joi.string().alphanum(),
+            name: Joi.string(),
             password: Joi.string(),
             username: Joi.string().alphanum(),
             isAdmin: Joi.boolean()

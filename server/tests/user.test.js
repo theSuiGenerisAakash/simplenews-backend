@@ -1,114 +1,88 @@
 /* eslint-env jest */
 
-import request from 'supertest';
-import httpStatus from 'http-status';
-import app from '../../index';
-import config from '../../config/config';
-import db from '../../config/sequelize';
+import request from "supertest";
+import httpStatus from "http-status";
+import app from "../../index";
+import config from "../../config/config";
+import db from "../../config/sequelize";
+import authHelper from "./helpers/authHelper";
 
 const apiVersionPath = `/api/v${config.apiVersion}`;
 
 describe('## User APIs', () => {
     let testApp;
-
-    beforeAll(() => {
-        testApp = request(app);
-    });
-
-    afterAll((done) => {
-        db.sequelize.close(done);
-    });
-
-    let user = {
-        username: 'KK123',
+    let testUserToken;
+    let anotherTestUserToken;
+    const testUser = {
+        username: "test",
+        password: "passw0rd",
+        name: "test"
+    };
+    const anotherTestUser = {
+        username: "test2",
+        password: "passw0rd",
+        name: "test2"
     };
 
-    describe(`# POST ${apiVersionPath}/users`, () => {
-        test('should create a new user', (done) => {
-            testApp
-                .post(`${apiVersionPath}/users`)
-                .send(user)
-                .expect(httpStatus.OK)
-                .then((res) => {
-                    expect(res.body.username).toEqual(user.username);
-                    user = res.body;
-                    done();
-                })
-                .catch(done);
-        });
+    beforeAll(async () => {
+        testApp = request(app);
+        await db.Users.truncate({ force: true })
+            .then(() => db.Users.createUsers([testUser, anotherTestUser]))
+            .then((createdUsers) => {
+                testUser.id = createdUsers[0].id;
+                anotherTestUser.id = createdUsers[1].id;
+            });
+        testUserToken = `Bearer ${await authHelper(testApp, testUser)}`;
+        anotherTestUserToken = `Bearer ${await authHelper(testApp, anotherTestUser)}`;
+    });
+
+    afterAll(async () => {
+        await db.Users.truncate({ force: true });
+        await db.sequelize.close();
     });
 
     describe(`# GET ${apiVersionPath}/users/:userId`, () => {
-        test('should get user details', (done) => {
+        test("should get user details", (done) => {
             testApp
-                .get(`${apiVersionPath}/users/${user.id}`)
+                .get(`${apiVersionPath}/users/${testUser.id}`)
+                .set("Authorization", testUserToken)
                 .expect(httpStatus.OK)
                 .then((res) => {
-                    expect(res.body.username).toEqual(user.username);
-                    done();
-                })
-                .catch(done);
-        });
-
-        test('should report error with message - Not found, when user does not exist', (done) => {
-            testApp
-                .get(`${apiVersionPath}/users/12345`)
-                .expect(httpStatus.NOT_FOUND)
-                .then((res) => {
-                    expect(res.body.message).toEqual('Not Found');
+                    expect(res.body.username).toEqual(testUser.username);
                     done();
                 })
                 .catch(done);
         });
     });
 
-    describe(`# PUT ${apiVersionPath}/users/:userId`, () => {
-        test('should update user details', (done) => {
-            user.username = 'KK';
-            testApp
-                .put(`${apiVersionPath}/users/${user.id}`)
-                .send(user)
-                .expect(httpStatus.OK)
-                .then((res) => {
-                    expect(res.body.username).toEqual('KK');
-                    done();
-                })
-                .catch(done);
+    describe(`# PUT ${apiVersionPath}/users`, () => {
+        beforeAll(() => {
+            testUser.name = "changedName";
         });
-    });
-
-    describe(`# GET ${apiVersionPath}/users/`, () => {
-        test('should get all users', (done) => {
+        afterAll(() => {
+            testUser.name = "test";
+        });
+        test("should update user details", (done) => {
             testApp
-                .get(`${apiVersionPath}/users`)
+                .put(`${apiVersionPath}/users`)
+                .set("Authorization", testUserToken)
+                .send(testUser)
                 .expect(httpStatus.OK)
                 .then((res) => {
-                    expect(Array.isArray(res.body));
+                    expect(res.body[0].name).toEqual(testUser.name);
                     done();
                 })
                 .catch(done);
         });
 
-        test('should get all users (with limit and skip)', (done) => {
+        test("should fail in case other user's token is used", (done) => {
             testApp
-                .get(`${apiVersionPath}/users`)
-                .query({ limit: 10, skip: 1 })
-                .expect(httpStatus.OK)
+                .put(`${apiVersionPath}/users`)
+                .set("Authorization", anotherTestUserToken)
+                .send(testUser)
+                .expect(httpStatus.FORBIDDEN)
                 .then((res) => {
-                    expect(Array.isArray(res.body));
-                    done();
-                })
-                .catch(done);
-        });
-    });
-
-    describe(`# DELETE ${apiVersionPath}/users/`, () => {
-        test('should delete user', (done) => {
-            testApp
-                .delete(`${apiVersionPath}/users/${user.id}`)
-                .expect(httpStatus.OK)
-                .then((res) => {
-                    expect(res.body).toEqual('KK');
+                    expect(res.text).toEqual("Request for another user is not allowed");
                     done();
                 })
                 .catch(done);
