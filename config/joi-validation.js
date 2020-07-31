@@ -154,11 +154,11 @@ const validationRules = {
             sourceName: Joi.string().required(),
             author: Joi.string().required(),
             title: Joi.string().required(),
-            description: Joi.string().required(),
+            description: Joi.string(),
             url: Joi.string().uri(),
             urlToImage: Joi.string().uri(),
             publishedAt: Joi.date().required(),
-            content: Joi.string().required()
+            content: Joi.string()
         }
     },
 

@@ -4,7 +4,8 @@ module.exports = {
     parser: "babel-eslint",
     rules: {
         "comma-dangle": 0,
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "func-names": 0
     },
     parserOptions: {
         sourceType: "module",

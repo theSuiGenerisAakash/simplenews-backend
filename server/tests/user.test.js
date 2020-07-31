@@ -9,7 +9,7 @@ import authHelper from "./helpers/authHelper";
 
 const apiVersionPath = `/api/v${config.apiVersion}`;
 
-describe('## User APIs', () => {
+describe("## User APIs", () => {
     let testApp;
     let testUserToken;
     let anotherTestUserToken;

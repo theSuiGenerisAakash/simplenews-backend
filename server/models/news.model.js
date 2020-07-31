@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false
+                allowNull: true
             },
             url: {
                 type: DataTypes.TEXT,
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             content: {
                 type: DataTypes.TEXT,
-                allowNull: false
+                allowNull: true
             },
             ...timeFields
         },
