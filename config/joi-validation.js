@@ -52,7 +52,7 @@ const validationRules = {
             id: Joi.string().required(),
             name: Joi.string(),
             password: Joi.string(),
-            username: Joi.string().alphanum(),
+            username: Joi.string(),
             isAdmin: Joi.boolean()
         }
     },
