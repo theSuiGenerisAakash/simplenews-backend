@@ -10,7 +10,7 @@ import { seed, unseed } from "./seeds";
 
 const apiVersionPath = `/api/v${config.apiVersion}`;
 
-xdescribe("## Auth API", () => {
+describe("## Auth API", () => {
     let testApp;
 
     beforeAll(async () => {
