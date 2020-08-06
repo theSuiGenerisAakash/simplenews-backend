@@ -1,5 +1,5 @@
 {
-    "name": "amida-api-boilerplate",
+    "name": "simplenews-backend",
     "version": "0.2.0",
     "description": "A Boilerplate application for building REST APIs",
     "author": "Alan Thompson <alan@amida.com>",
@@ -12,7 +12,7 @@
     },
     "scripts": {
         "start": "gulp serve",
-        "start:debug": "cross-env DEBUG=amida-api-boilerplate:* yarn start",
+        "start:debug": "cross-env DEBUG=simplenews-backend:* yarn start",
         "build": "gulp",
         "copy": "gulp copy",
         "babel": "gulp babel",
@@ -22,7 +22,7 @@
         "beautify": "es-beautifier -u -c .eslintrc.js *.js server config",
         "test": "jest --runInBand",
         "test:watch": "jest --runInBand --watch",
-        "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _jest -- --ui bdd --reporter spec --colors --compilers js:babel-core/register server/tests --recursive",
+        "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover jest --runInBand --ui bdd --reporter spec --colors --compilers js:babel-core/register server/tests --recursive",
         "test:check-coverage": "yarn test:coverage && istanbul check-coverage",
         "report-coverage": "coveralls < ./coverage/lcov.info"
     },
@@ -47,13 +47,14 @@
             "./jest-setup.js"
         ],
         "testMatch": [
-            "**/Tests/**/*.js",
+            "**/tests/**/*.js",
             "**/?(*.)(spec|test|integration).js?(x)"
         ],
         "testPathIgnorePatterns": [
             "/node_modules/",
             "/coverage/",
-            "/dist/"
+            "/dist/",
+            "/config"
         ],
         "testEnvironment": "node"
     },

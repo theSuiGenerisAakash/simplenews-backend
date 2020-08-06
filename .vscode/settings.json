@@ -10,5 +10,6 @@
         "source.fixAll.eslint": true
     },
     "prettier.tabWidth": 4,
-    "prettier.requireConfig": true
+    "prettier.requireConfig": true,
+    "prettier.packageManager": "yarn"
 }
