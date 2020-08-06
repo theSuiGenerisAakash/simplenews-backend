@@ -51,7 +51,10 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     BookmarkedNews.createBookmark = async (userId, newsId) => {
-        const isAlreadyPresent = await BookmarkedNews.findOne({ where: { userId, newsId } });
+        const isAlreadyPresent = await BookmarkedNews.findOne({
+            where: { userId, newsId },
+            paranoid: false
+        });
         if (isAlreadyPresent) {
             return isAlreadyPresent.restore();
         }

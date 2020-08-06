@@ -19,15 +19,15 @@ module.exports = (sequelize, DataTypes) => {
             },
             sourceName: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true
             },
             author: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true
             },
             title: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true
             },
             description: {
                 type: DataTypes.TEXT,
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             url: {
                 type: DataTypes.TEXT,
-                allowNull: false,
+                allowNull: true,
                 unique: true
             },
             urlToImage: {
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             publishedAt: {
                 type: DataTypes.DATE,
-                allowNull: false
+                allowNull: true
             },
             content: {
                 type: DataTypes.TEXT,
@@ -72,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         return News.findAll({
             where: {
                 id: {
-                    [Sequelize.Op.in]: [newsIds.join(",")]
+                    [Sequelize.Op.in]: newsIds
                 }
             }
         });
