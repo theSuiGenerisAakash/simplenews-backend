@@ -1,8 +1,8 @@
 {
     "name": "simplenews-backend",
     "version": "0.2.0",
-    "description": "A Boilerplate application for building REST APIs",
-    "author": "Alan Thompson <alan@amida.com>",
+    "description": "Simplenews - backend server in Express/Node.js",
+    "author": "Aakash Verma<aakash.verma95@outlook.com>",
     "main": "index.js",
     "private": false,
     "engines": {

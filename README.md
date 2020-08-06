@@ -1,8 +1,12 @@
-# Amida API Boilerplate
+# SimpleNews(Backend) - All your news at one place.
 
 ## Overview
 
-This is a boilerplate application for building REST APIs in Node.js using ES6 and Express. Intended for use with Postgres using Sequelize ORM.
+This is a Node.js application which serves as the backend for the SimpleNews application. Written using ES6 and Express, it is intended for use with Postgres using Sequelize ORM.
+
+> This applicaation is based on the Amida api boilerplate template available [here](https://github.com/amida-tech/api-boilerplate)
+
+#### Please note the below README has been provided in the boilerplate template but has been updated.
 
 ### Features
 
@@ -38,11 +42,11 @@ Install dependencies:
 yarn
 ```
 
-Set environment (vars):
+Set environment via the `.env` file (vars):
 
-```sh
-cp .env.example .env
-```
+> This is purely for development purpose. You can set here everything from the node environment and the port for the server to expose, to database creds as well as the NewsAPI API key. For production deployment, the env file can be hosted in a vault or provided as env variables.
+
+##### Please also note the SYNC_DB option which synchronizes your database and schema with tables from the Model files using Sequelize.
 
 Start server:
 
@@ -51,23 +55,25 @@ Start server:
 yarn start
 
 # Selectively set DEBUG env var to get logs
-DEBUG=amida-api-boilerplate:* yarn start
+DEBUG=simplenews:* yarn start
 ```
 
 Tests:
+
+##### You can run the server once with SYNC_DB=true and NODE_ENV=development with SCHEM=test to create the tables and have them ready to write and run tests. Make sure you turn off SYNC_DB once your tables are created in your test schema.
 
 ```sh
 # Run tests written in ES6
 yarn test
 
 # Run test along with code coverage
-yarn test:coverage
+yarn test:coverage //not working currently
 
 # Run tests on file change
 yarn test:watch
 
 # Run tests enforcing code coverage (configured via .istanbul.yml)
-yarn test:check-coverage
+yarn test:check-coverage //not working currently
 ```
 
 Lint:
@@ -104,34 +110,4 @@ gulp
 
 # Use any process manager to start your services
 4. pm2 start dist/index.js
-```
-
-## Logging
-
-Universal logging library [winston](https://www.npmjs.com/package/winston) is used for logging. It has support for multiple transports. A transport is essentially a storage device for your logs. Each instance of a winston logger can have multiple transports configured at different levels. For example, one may want error logs to be stored in a persistent remote location (like a database), but all logs output to the console or a local file. We just log to the console for simplicity, you can configure more transports as per your requirement.
-
-#### API logging
-
-Logs detailed info about each api request to console during development.
-![Detailed API logging](https://cloud.githubusercontent.com/assets/4172932/12563354/f0a4b558-c3cf-11e5-9d8c-66f7ca323eac.JPG)
-
-#### Error logging
-
-Logs stacktrace of error to console along with other details. You should ideally store all error messages persistently.
-![Error logging](https://cloud.githubusercontent.com/assets/4172932/12563361/fb9ef108-c3cf-11e5-9a58-3c5c4936ae3e.JPG)
-
-## Code Coverage
-
-Get code coverage summary on executing `yarn test`
-![Code Coverage Text Summary](https://cloud.githubusercontent.com/assets/4172932/12827832/a0531e70-cba7-11e5-9b7c-9e7f833d8f9f.JPG)
-
-`yarn test` also generates HTML code coverage report in `coverage/` directory. Open `lcov-report/index.html` to view it.
-![Code coverage HTML report](https://cloud.githubusercontent.com/assets/4172932/12625331/571a48fe-c559-11e5-8aa0-f9aacfb8c1cb.jpg)
-
-## Docker Deployment
-
-Docker Compose:
-
-```sh
-docker-compose up
 ```
