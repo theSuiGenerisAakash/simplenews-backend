@@ -143,7 +143,7 @@ const validationRules = {
                 "ve",
                 "za"
             ]),
-            page: Joi.number().default(0)
+            page: Joi.number().default(1)
         }).min(2)
     },
 
@@ -161,14 +161,14 @@ const validationRules = {
         },
         news: {
             sourceId: Joi.string().allow(null).required(),
-            sourceName: Joi.string().required(),
-            author: Joi.string().required(),
-            title: Joi.string().required(),
-            description: Joi.string(),
-            url: Joi.string().uri(),
-            urlToImage: Joi.string().uri(),
+            sourceName: Joi.string().allow(null).required(),
+            author: Joi.string().allow(null).required(),
+            title: Joi.string().allow(null).required(),
+            description: Joi.string().allow(null).required(),
+            url: Joi.string().uri().allow(null).required(),
+            urlToImage: Joi.string().uri().allow(null).required(),
             publishedAt: Joi.date().required(),
-            content: Joi.string()
+            content: Joi.string().allow(null).required()
         }
     },
 

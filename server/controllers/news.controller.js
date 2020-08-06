@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import { uniqBy } from "lodash";
 import db from "../../config/sequelize";
 import catchClause from "../helpers/controllerHelpers";
 import config from "../../config/config";
@@ -27,12 +28,13 @@ const { News, BookmarkedNews } = db;
  * Get news
  * @property {string} [req.body.search]
  * @property {string} [req.body.category]
- * @property {string} [req.body.ccountry]
+ * @property {string} [req.body.country]
+ * @property {number} [req.body.page]
  * @returns {User}
  */
 function getNews(req, res, next) {
     const {
-        body: { search, category, country }
+        body: { search, category, country, page }
     } = req;
 
     return newsapi.v2
@@ -40,10 +42,26 @@ function getNews(req, res, next) {
             ...(search && { q: search }),
             ...(category && { category }),
             language: "en",
-            ...(country && { country })
+            ...(country && { country }),
+            page
         })
-        .then((responses) => res.json(responses))
-        .catch((err) => catchClause(err, next, "User fetch failed"));
+        .then((responses) =>
+            res.json(
+                uniqBy(
+                    responses.articles.map((response) => {
+                        const modRes = {
+                            ...response,
+                            sourceId: response.source.id,
+                            sourceName: response.source.name
+                        };
+                        delete modRes.source;
+                        return modRes;
+                    }),
+                    "url"
+                )
+            )
+        )
+        .catch((err) => catchClause(err, next, "News fetch failed"));
 }
 
 /**
@@ -59,13 +77,13 @@ function getBookmarkedNews(req, res, next) {
         .then((bookmarks) => {
             if (bookmarks.length > 0) {
                 const newsIds = bookmarks.map((bookmark) => bookmark.dataValues.newsId);
-                return News.getNewsByIds(newsIds).then((newsList) =>
-                    res.json(newsList.map((news) => news.dataValues))
-                );
+                return News.getNewsByIds(newsIds).then((newsList) => {
+                    return res.json(newsList.map((news) => news.dataValues));
+                });
             }
-            return res.status(httpStatus.NO_CONTENT).send("No bookmarked news found");
+            return res.status(httpStatus.NOT_FOUND).json({ message: "No bookmarked news found" });
         })
-        .catch((err) => catchClause(err, next, "User details couldn't be updated"));
+        .catch((err) => catchClause(err, next, "Something went wrong"));
 }
 
 /**
@@ -81,7 +99,7 @@ function bookmarkNews(req, res, next) {
     } = req;
     const saveBookmark = (newsObj) =>
         BookmarkedNews.createBookmark(userId, newsObj.dataValues.id).then((bookmark) =>
-            res.status(httpStatus.CREATED).send(Array.isArray(bookmark) ? bookmark[0] : bookmark)
+            res.status(httpStatus.CREATED).send(newsObj.dataValues)
         );
     return News.getNewsByUrl(news.url)
         .then((newsRes) => {
@@ -90,13 +108,13 @@ function bookmarkNews(req, res, next) {
             }
             return News.addNews(news).then((addedNews) => saveBookmark(addedNews));
         })
-        .catch((err) => catchClause(err, next, "User details couldn't be updated"));
+        .catch((err) => catchClause(err, next, "News couldn't be bookmarked"));
 }
 
 /**
  * Remove bookmarked news of a user
  * @param {string} req.params.userId - user's id
- * @property {string} req.body.newsId - news to be bookmarked
+ * @property {string} req.body.newsId - news to be un-bookmarked
  * @returns {string} - textual status
  */
 function removeBookmarkedNews(req, res, next) {
@@ -108,7 +126,7 @@ function removeBookmarkedNews(req, res, next) {
         .then((removedBookmark) =>
             res
                 .status(removedBookmark ? httpStatus.OK : httpStatus.NOT_FOUND)
-                .send(removedBookmark ? "Bookmark removed" : "Bookmark not found")
+                .json({ message: removedBookmark ? "Bookmark removed" : "Bookmark not found" })
         )
         .catch((err) => catchClause(err, next, "Bookmark removal failed"));
 }
