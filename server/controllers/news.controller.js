@@ -98,7 +98,7 @@ function bookmarkNews(req, res, next) {
         body: { news }
     } = req;
     const saveBookmark = (newsObj) =>
-        BookmarkedNews.createBookmark(userId, newsObj.dataValues.id).then((bookmark) =>
+        BookmarkedNews.createBookmark(userId, newsObj.dataValues.id).then(() =>
             res.status(httpStatus.CREATED).send(newsObj.dataValues)
         );
     return News.getNewsByUrl(news.url)
