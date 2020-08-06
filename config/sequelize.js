@@ -4,6 +4,7 @@ import path from "path";
 import _ from "lodash";
 import config from "./config";
 import logger from "./winston/get-default-logger";
+import { seed, unseed } from "../server/tests/seeds";
 
 const db = {};
 
@@ -51,9 +52,17 @@ if (config.syncDB) {
         .sync({ force: true })
         .then(async () => {
             logger.info("Database structure synchronized");
+            if (config.env === "development") {
+                return seed(db);
+            }
+            return Promise.resolve();
         })
         .catch(async (error) => {
             logger.error("An error occured: ", error);
+            if (config.env === "development") {
+                return unseed(db);
+            }
+            return Promise.reject();
         });
 }
 
