@@ -2,6 +2,7 @@ import express from "express";
 import { ev, validationRules } from "../../config/joi-validation";
 import userCtrl from "../controllers/user.controller";
 import isSameUser from "../helpers/userUtil";
+import adminCtrl from "../controllers/admin.controller";
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -16,5 +17,10 @@ router
 
     /** PUT /api/users/ - Update user */
     .put(ev(validationRules.updateUser), isSameUser, userCtrl.update);
+
+router
+    .route("/new-user")
+    /** POST /api/users - Create new user */
+    .post(ev(validationRules.createUserPublic), adminCtrl.create);
 
 export default router;

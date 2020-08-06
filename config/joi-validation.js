@@ -36,6 +36,16 @@ const validationRules = {
         }
     },
 
+    // POST /api//users
+    createUserPublic: {
+        body: {
+            username: Joi.string().alphanum().required(),
+            name: Joi.string().required(),
+            password: Joi.string().required(),
+            isAdmin: Joi.boolean().default(false)
+        }
+    },
+
     // PUT /api/users/
     updateUser: {
         body: {

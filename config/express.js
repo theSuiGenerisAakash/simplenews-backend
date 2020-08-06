@@ -56,7 +56,7 @@ const baseUrl = `/api/v${config.apiVersion}`;
 // check for authentication for all routes to be mounted except for login and health-check
 app.use(
     expressJwt({ secret: config.jwtSecret }).unless({
-        path: [`${baseUrl}/auth/login`, `${baseUrl}/health-check`]
+        path: [`${baseUrl}/auth/login`, `${baseUrl}/health-check`, `${baseUrl}/users/new-user`]
     })
 );
 
