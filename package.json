@@ -120,7 +120,7 @@
         "istanbul": "1.1.0-alpha.1",
         "jest": "24.8.0",
         "jest-fetch-mock": "2.1.2",
-        "jsdom": "15.1.1",
+        "jsdom": "16.5.0",
         "prettier": "false2.0.5",
         "supertest": "false4.0.2",
         "validate-commit-msg": "^2.6.1"
